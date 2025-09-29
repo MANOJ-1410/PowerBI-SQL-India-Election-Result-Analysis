@@ -1,0 +1,46 @@
+table states
+	lineageTag: a44d5bc9-222b-4ca1-8b95-e72f26b36d4f
+
+	column 'State ID'
+		dataType: string
+		lineageTag: 3a283850-4a2c-4fd5-956d-1e8b32c15a3c
+		summarizeBy: none
+		sourceColumn: State ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column State
+		dataType: string
+		lineageTag: 04ddda34-fb41-47e0-8266-8a8f870e5ab0
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Winning Alliance Legend' =
+			
+			var NDASeats = CALCULATE(COUNT(constituencywise_results[Winning Candidate]),partywise_results[Party Alliance] = "NDA")
+			VAR INDIASeats = CALCULATE(COUNT(constituencywise_results[Winning Candidate]),partywise_results[Party Alliance] = "I.N.D.I.A.")
+			
+			RETURN
+			IF(NDASeats >= INDIASeats , "NDA" , "I.N.D.I.A.")
+		lineageTag: 08aafb0e-1bad-4351-a236-3ee702038bb8
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition states = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\manoj.c\Desktop\PowerBI\India-Elections-2024-SQL-PowerBI-Analysis\Power-BI\Power-BI-Data\states.csv"),[Delimiter=",", Columns=2, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Change Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}, {"Column2", type text}}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Change Type", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"State ID", type text}, {"State", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

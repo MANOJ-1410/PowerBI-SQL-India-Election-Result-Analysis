@@ -1,0 +1,18 @@
+relationship AutoDetected_6bcb79e0-afe1-4aea-9fc2-6bcbd2b5d093
+	fromColumn: constituencywise_details.'Constituency ID'
+	toColumn: constituencywise_results.'Constituency ID'
+
+relationship AutoDetected_c38b9034-f140-4758-a3f4-a3331ef520fc
+	fromColumn: constituencywise_results.'Party ID'
+	toColumn: partywise_results.'Party ID'
+
+relationship AutoDetected_1f921e4e-ec59-4c89-8737-8d7945ea1c25
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: statewise_results.'Parliament Constituency'
+	toColumn: constituencywise_results.'Parliament Constituency'
+
+relationship AutoDetected_3aa12b61-30c9-4648-afff-b4ab776c6282
+	fromColumn: statewise_results.'State ID'
+	toColumn: states.'State ID'
+

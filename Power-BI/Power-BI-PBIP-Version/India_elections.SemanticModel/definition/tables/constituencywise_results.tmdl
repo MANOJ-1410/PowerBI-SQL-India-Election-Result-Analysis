@@ -1,0 +1,122 @@
+table constituencywise_results
+	lineageTag: 258fa3d7-47e5-4380-ad0e-7f1ef5d97ce6
+
+	measure 'NDA Seats Count' = CALCULATE(COUNT(constituencywise_results[Constituency Name]),partywise_results[Party Alliance]="NDA")
+		formatString: 0
+		lineageTag: 50850b71-1734-4f18-a17d-1b4c981f46ef
+
+	measure 'I.N.D.I.A Seats Count' = CALCULATE(COUNT(constituencywise_results[Constituency Name]),partywise_results[Party Alliance]="I.N.D.I.A.")
+		formatString: 0
+		lineageTag: 8ebfbeca-b111-4cbd-9c67-c598cbb7e9ac
+
+	measure 'OTHER Seats Count' = CALCULATE(COUNT(constituencywise_results[Constituency Name]),partywise_results[Party Alliance]="OTHER")
+		formatString: 0
+		lineageTag: 09a0a689-c988-4f15-91a0-5e0fdab0ad1a
+
+	measure 'Winning Alliance Legend' =
+			
+			var NDASeats = CALCULATE(COUNT(constituencywise_results[Winning Candidate]),partywise_results[Party Alliance] = "I.N.D.I.A.")
+			VAR INDIASeats = CALCULATE(COUNT(constituencywise_results[Winning Candidate]),partywise_results[Party Alliance] = "NDA")
+			
+			RETURN
+			IF(NDASeats >= INDIASeats , "NDA" , "I.N.D.I.A.")
+		lineageTag: 3dabfd89-5dcc-4b96-8e13-feb1932536e0
+
+	column 'S.No'
+		dataType: int64
+		formatString: 0
+		lineageTag: a5aa4eaf-b482-41ce-a56f-dc105b876822
+		summarizeBy: sum
+		sourceColumn: S.No
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Parliament Constituency'
+		dataType: string
+		lineageTag: d38a46b1-d902-4ff4-9442-8f693cf6ba0c
+		summarizeBy: none
+		sourceColumn: Parliament Constituency
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Constituency Name'
+		dataType: string
+		lineageTag: 45cedcf3-d3e7-4d25-b72a-dac681007c57
+		summarizeBy: none
+		sourceColumn: Constituency Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Winning Candidate'
+		dataType: string
+		lineageTag: b2d153da-be35-491e-a39e-8aca6c491b8d
+		summarizeBy: none
+		sourceColumn: Winning Candidate
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total Votes'
+		dataType: int64
+		formatString: 0
+		lineageTag: eba24fa0-bc08-44d3-94be-4f951dd86aec
+		summarizeBy: sum
+		sourceColumn: Total Votes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Margin
+		dataType: int64
+		formatString: 0
+		lineageTag: 9cb28259-3f92-4be9-be5d-fc0983cb8912
+		summarizeBy: sum
+		sourceColumn: Margin
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Constituency ID'
+		dataType: string
+		lineageTag: e5c30973-5882-41cd-9aee-88dac848ff03
+		summarizeBy: none
+		sourceColumn: Constituency ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Party ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 267920c0-a7e1-4198-9230-08b12eeb5282
+		summarizeBy: none
+		sourceColumn: Party ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Party Name (Results)' = LOOKUPVALUE(partywise_results[Party], partywise_results[Party ID], constituencywise_results[Party ID])
+		lineageTag: 532eb6fa-2ce3-4530-b67a-5a711729afaf
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Party Alliance' = LOOKUPVALUE(partywise_results[Party Alliance],partywise_results[Party ID],constituencywise_results[Party ID])
+		lineageTag: 3c78c097-0d41-4a2a-b211-6af849fa7797
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Party Short Name' = LOOKUPVALUE(partywise_results[Party - Short], partywise_results[Party ID], constituencywise_results[Party ID])
+		lineageTag: aaaa15ef-717f-4a5d-ba23-b5dea5f8b740
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition constituencywise_results = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\manoj.c\Desktop\PowerBI\India-Elections-2024-SQL-PowerBI-Analysis\Power-BI\Power-BI-Data\constituencywise_results.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"S.No", Int64.Type}, {"Parliament Constituency", type text}, {"Constituency Name", type text}, {"Winning Candidate", type text}, {"Total Votes", Int64.Type}, {"Margin", Int64.Type}, {"Constituency ID", type text}, {"Party ID", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

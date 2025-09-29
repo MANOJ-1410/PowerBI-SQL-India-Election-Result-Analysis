@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "India_elections"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "37a0fa38-d061-4c50-ad9a-2c29325b4d29"
+  }
+}

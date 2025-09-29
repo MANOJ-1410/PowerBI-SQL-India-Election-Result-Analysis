@@ -1,0 +1,186 @@
+table constituencywise_details
+	lineageTag: 53d24e93-e97f-4704-b2da-9272315176fa
+
+	measure 'State Secondary KPI' = CALCULATE(SELECTEDVALUE(states[State],"No State"), FILTER(constituencywise_results,constituencywise_results[Constituency ID] = MAX(constituencywise_details[Constituency ID])))
+		lineageTag: 1e08f941-36cd-4e3c-8f1f-74b08f128583
+
+	measure 'Total Votes KPI' = "Total Votes" & " : " & MAX(constituencywise_details[Total Votes])
+		lineageTag: 8aaf7a19-f2d2-4952-9636-a301c9a3c1c5
+
+	measure 'Vote Share KPI' = "Vote Share" & " : " & max(constituencywise_details[% of Votes]) & " % "
+		lineageTag: 85d1324e-bae6-4938-86c2-cd07a17b606c
+
+	measure 'Runner Up Candidate' = ```
+			
+			var maxvotes = MAX(constituencywise_details[Total Votes])
+			var secondmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < maxvotes), constituencywise_details[Total Votes])
+			
+			RETURN 
+			    CALCULATE(
+			    MAX(constituencywise_details[Candidate]) ,constituencywise_details[Total Votes] = secondmaxvotes)
+			```
+		lineageTag: 65bb984e-4ca1-4e46-999d-ffee1e32d090
+
+	measure 'Runner Up Candidate Party KPI' = ```
+			
+			var maxvotes = MAX(constituencywise_details[Total Votes])
+			var secondmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < maxvotes), constituencywise_details[Total Votes])
+			
+			RETURN 
+			    CALCULATE(
+			    MAX(constituencywise_details[Party]) ,constituencywise_details[Total Votes] = secondmaxvotes)
+			```
+		lineageTag: ca761328-e1bd-4f4a-a2bd-24da090f149f
+
+	measure 'Runner Up Candidate Total Votes' = ```
+			
+			"Total Votes" & " : " & 
+			var maxvotes = MAX(constituencywise_details[Total Votes])
+			var secondmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < maxvotes), constituencywise_details[Total Votes])
+			
+			RETURN 
+			    CALCULATE(
+			    MAX(constituencywise_details[Total Votes]) ,constituencywise_details[Total Votes] = secondmaxvotes)
+			```
+		lineageTag: 859df0ad-b66a-4123-a9c1-a5312bb403a9
+
+	measure 'Runner Up Candidate Vote Share' = ```
+			
+			"Vote Share" & " : " & 
+			var maxvotes = MAX(constituencywise_details[Total Votes])
+			var secondmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < maxvotes), constituencywise_details[Total Votes])
+			
+			RETURN 
+			    CALCULATE(
+			    MAX(constituencywise_details[% of Votes]) ,constituencywise_details[Total Votes] = secondmaxvotes) & " % "
+			```
+		lineageTag: cd042086-7c63-41e3-835d-5e73eabb970b
+
+	measure '2nd Runner Up Candidate' = ```
+			
+			var maxvotes = MAX(constituencywise_details[Total Votes])
+			var secondmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < maxvotes), constituencywise_details[Total Votes])
+			var thirdmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < secondmaxvotes),constituencywise_details[Total Votes])
+			RETURN 
+			    CALCULATE(
+			    MAX(constituencywise_details[Candidate]) ,constituencywise_details[Total Votes] = thirdmaxvotes)
+			```
+		lineageTag: 1fc0318e-0700-40b3-b08b-4a859f5b471e
+
+	measure '2nd Runner Up Candidate Party' = ```
+			
+			var maxvotes = MAX(constituencywise_details[Total Votes])
+			var secondmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < maxvotes), constituencywise_details[Total Votes])
+			var thirdmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < secondmaxvotes),constituencywise_details[Total Votes])
+			RETURN 
+			    CALCULATE(
+			    MAX(constituencywise_details[Party]) ,constituencywise_details[Total Votes] = thirdmaxvotes)
+			```
+		lineageTag: 724949e4-ad10-4846-b2c2-9f67158d05bb
+
+	measure '2nd Runner Up Candidate Total Votes' = ```
+			
+			"Total Votes" & " : " &
+			var maxvotes = MAX(constituencywise_details[Total Votes])
+			var secondmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < maxvotes), constituencywise_details[Total Votes])
+			var thirdmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < secondmaxvotes),constituencywise_details[Total Votes])
+			RETURN 
+			    CALCULATE(
+			    MAX(constituencywise_details[Total Votes]) ,constituencywise_details[Total Votes] = thirdmaxvotes)
+			```
+		lineageTag: b66cf47c-4b8a-4baf-b123-666b14e6593e
+
+	measure '2nd Runner Up Candidate Vote Share' = ```
+			
+			"Vote Share" & " : " &
+			var maxvotes = MAX(constituencywise_details[Total Votes])
+			var secondmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < maxvotes), constituencywise_details[Total Votes])
+			var thirdmaxvotes = MAXX(FILTER(constituencywise_details,constituencywise_details[Total Votes] < secondmaxvotes),constituencywise_details[Total Votes])
+			RETURN 
+			    CALCULATE(
+			    MAX(constituencywise_details[% of Votes]) ,constituencywise_details[Total Votes] = thirdmaxvotes) & " % "
+			```
+		lineageTag: 87a093b2-22e3-43e3-bd64-bfc53af2ccb4
+
+	column 'S.N.'
+		dataType: int64
+		formatString: 0
+		lineageTag: 3a8ce489-79f9-4a7d-8ab3-7d5c991766b7
+		summarizeBy: sum
+		sourceColumn: S.N.
+
+		annotation SummarizationSetBy = Automatic
+
+	column Candidate
+		dataType: string
+		lineageTag: 744ce483-fd8d-4604-b9b6-82a97290463f
+		summarizeBy: none
+		sourceColumn: Candidate
+
+		annotation SummarizationSetBy = Automatic
+
+	column Party
+		dataType: string
+		lineageTag: 6f59deb2-656a-40e3-8307-0515925a3758
+		summarizeBy: none
+		sourceColumn: Party
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'EVM Votes'
+		dataType: int64
+		formatString: 0
+		lineageTag: eefc1854-3d22-4374-90c4-9df338305b53
+		summarizeBy: sum
+		sourceColumn: EVM Votes
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Postal Votes'
+		dataType: int64
+		formatString: 0
+		lineageTag: eb8e159e-4680-44d9-9e9d-1a9fed864c59
+		summarizeBy: sum
+		sourceColumn: Postal Votes
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total Votes'
+		dataType: int64
+		formatString: 0
+		lineageTag: c830de60-939e-47b5-88da-5a3e3a8b090f
+		summarizeBy: sum
+		sourceColumn: Total Votes
+
+		annotation SummarizationSetBy = Automatic
+
+	column '% of Votes'
+		dataType: double
+		lineageTag: e130e92c-542b-40b9-b5f8-cf0b8ff81d65
+		summarizeBy: sum
+		sourceColumn: % of Votes
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Constituency ID'
+		dataType: string
+		lineageTag: bfb0b12d-c5eb-4d4b-8dcd-ea700d49a7d3
+		summarizeBy: none
+		sourceColumn: Constituency ID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition constituencywise_details = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\manoj.c\Desktop\PowerBI\India-Elections-2024-SQL-PowerBI-Analysis\Power-BI\Power-BI-Data\constituencywise_details.csv"),[Delimiter=",", Columns=8, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"S.N.", Int64.Type}, {"Candidate", type text}, {"Party", type text}, {"EVM Votes", Int64.Type}, {"Postal Votes", Int64.Type}, {"Total Votes", Int64.Type}, {"% of Votes", type number}, {"Constituency ID", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

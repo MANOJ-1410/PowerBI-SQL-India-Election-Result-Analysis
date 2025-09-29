@@ -1,0 +1,135 @@
+table partywise_results
+	lineageTag: 027c5909-8b4a-4f77-8e4c-5fd3cbf9e0c4
+
+	measure 'Total Seats' = SUM(partywise_results[Won])
+		formatString: 0
+		lineageTag: d0de7080-ab32-4d26-a0b3-36f04984273b
+
+	measure 'NDA Seats' = CALCULATE([Total Seats],partywise_results[Party Alliance]="NDA")
+		formatString: 0
+		lineageTag: d9f12c33-dd10-4d96-819d-c27926548e27
+
+	measure '% of NDA Seats' = DIVIDE([NDA Seats],[Total Seats], 0)
+		formatString: 0%;-0%;0%
+		lineageTag: cea0f6da-3a56-40c1-98b2-9eddb31f5e7d
+
+	measure 'I.N.D.I.A. Seats' = CALCULATE([Total Seats],partywise_results[Party Alliance]="I.N.D.I.A.")
+		formatString: 0
+		lineageTag: 2b251ca6-233f-41de-9551-dc6e90344597
+
+	measure '% of INDIA Seats' = DIVIDE([I.N.D.I.A. Seats],[Total Seats], 0)
+		formatString: 0%;-0%;0%
+		lineageTag: ab70a97e-21d8-40d7-a047-02dd9a443cd7
+
+	measure 'OTHER Seats' = CALCULATE([Total Seats],partywise_results[Party Alliance]="OTHER")
+		formatString: 0
+		lineageTag: 23b55827-e733-4b7b-b4db-a6a9035a93f3
+
+	measure '% of OTHER Seats' = DIVIDE([OTHER Seats],[Total Seats], 0)
+		formatString: 0%;-0%;0%
+		lineageTag: b440f7ef-80cd-4c25-ae13-f8a28fc0097b
+
+	column Party
+		dataType: string
+		lineageTag: 35a9060f-a768-40a2-a1a4-fc8fa05b37d0
+		summarizeBy: none
+		sourceColumn: Party
+
+		annotation SummarizationSetBy = Automatic
+
+	column Won
+		dataType: int64
+		formatString: 0
+		lineageTag: 348aa3f3-deb7-44cf-a755-af11c0af4d05
+		summarizeBy: none
+		sourceColumn: Won
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Party ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 306e7db6-139a-4885-ab35-9be258cedffb
+		summarizeBy: none
+		sourceColumn: Party ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Party Alliance' =
+			
+			IF(
+			    partywise_results[Party] = "Bharatiya Janata Party - BJP" ||
+			    partywise_results[Party] = "Telugu Desam - TDP" ||
+			    partywise_results[Party] = "Janata Dal  (United) - JD(U)" ||
+			    partywise_results[Party] = "Shiv Sena - SHS" ||
+			    partywise_results[Party] = "AJSU Party - AJSUP" ||
+			    partywise_results[Party] = "Apna Dal (Soneylal) - ADAL" ||
+			    partywise_results[Party] = "Asom Gana Parishad - AGP" ||
+			    partywise_results[Party] = "Hindustani Awam Morcha (Secular) - HAMS" ||
+			    partywise_results[Party] = "Janasena Party - JnP" ||
+			    partywise_results[Party] = "Janata Dal  (Secular) - JD(S)" ||
+			    partywise_results[Party] = "Lok Janshakti Party(Ram Vilas) - LJPRV" ||
+			    partywise_results[Party] = "Nationalist Congress Party - NCP" ||
+			    partywise_results[Party]= "Rashtriya Lok Dal - RLD" ||
+			    partywise_results[Party] = "Sikkim Krantikari Morcha - SKM",
+			    "NDA",
+			    IF(
+			        partywise_results[Party] = "Indian National Congress - INC" ||
+			        partywise_results[Party] = "Aam Aadmi Party - AAAP" ||
+			        partywise_results[Party] = "All India Trinamool Congress - AITC" ||
+			        partywise_results[Party] = "Bharat Adivasi Party - BHRTADVSIP" ||
+			        partywise_results[Party] = "Communist Party of India  (Marxist) - CPI(M)" ||
+			        partywise_results[Party] = "Communist Party of India  (Marxist-Leninist)  (Liberation) - CPI(ML)(L)" ||
+			        partywise_results[Party] = "Communist Party of India - CPI" ||
+			        partywise_results[Party] = "Dravida Munnetra Kazhagam - DMK" ||
+			        partywise_results[Party] = "Indian Union Muslim League - IUML" ||
+			        partywise_results[Party] = "Jammu & Kashmir National Conference - JKN" ||
+			        partywise_results[Party] = "Jharkhand Mukti Morcha - JMM" ||
+			        partywise_results[Party] = "Kerala Congress - KEC" ||
+			        partywise_results[Party] = "Marumalarchi Dravida Munnetra Kazhagam - MDMK" ||
+			        partywise_results[Party] = "Nationalist Congress Party Sharadchandra Pawar - NCPSP" ||
+			        partywise_results[Party] = "Rashtriya Janata Dal - RJD" ||
+			        partywise_results[Party] = "Rashtriya Loktantrik Party - RLTP" ||
+			        partywise_results[Party] = "Revolutionary Socialist Party - RSP" ||
+			        partywise_results[Party] = "Samajwadi Party - SP" ||
+			        partywise_results[Party] = "Shiv Sena (Uddhav Balasaheb Thackrey) - SHSUBT" ||
+			        partywise_results[Party] = "Viduthalai Chiruthaigal Katchi - VCK",
+			        "I.N.D.I.A.",
+			        "OTHER"
+			    )
+			)
+		lineageTag: 23fb759c-2f61-48a7-91bd-835cd4809e3f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Party - Short'
+		dataType: string
+		lineageTag: b8a60374-aa04-4ac2-80a4-a93088881f72
+		summarizeBy: none
+		sourceColumn: Party - Short
+		sortByColumn: Won
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	partition partywise_results = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\manoj.c\Desktop\PowerBI\India-Elections-2024-SQL-PowerBI-Analysis\Power-BI\Power-BI-Data\partywise_results.csv"),[Delimiter=",", Columns=3, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Party", type text}, {"Won", Int64.Type}, {"Party ID", Int64.Type}}),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Changed Type", "Party", "Party - Copy"),
+				    #"Split Column by Delimiter" = Table.SplitColumn(#"Duplicated Column", "Party - Copy", Splitter.SplitTextByEachDelimiter({"-"}, QuoteStyle.Csv, true), {"Party - Copy.1", "Party - Copy.2"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"Party - Copy.1", type text}, {"Party - Copy.2", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type1",{"Party - Copy.1"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Party - Copy.2", "Party - Short"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
